@@ -1,7 +1,6 @@
 # coding=utf-8
-
+from marshmallow import Schema, fields
 from sqlalchemy import Column, String, Float, Integer, ForeignKey
-
 from .entity import Entity, Base
 
 
@@ -19,3 +18,13 @@ class OptionValue(Entity, Base):
         self.option_id = option_id
         self.weight = weight
         self.value = value
+
+class OptionValueSchema(Schema):
+    id = fields.Number()
+    title = fields.Str()
+    description = fields.Str()
+    node_id = fields.Number()
+    option_id = fields.Number()
+    created_at = fields.DateTime()
+    updated_at = fields.DateTime()
+    last_updated_by = fields.Str()

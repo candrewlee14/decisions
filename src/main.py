@@ -1,10 +1,15 @@
 # coding=utf-8
+from flask import Flask, jsonify, request
 from sqlalchemy import null
-from entities.entity import Session, engine, Base
-from entities.tree import Tree
-from entities.option import Option
-from entities.node import Node
-from entities.option_value import OptionValue
+
+from src.entities.entity import Session, engine, Base
+from src.entities.tree import Tree, Tree
+from src.entities.option import Option, OptionSchema
+from src.entities.node import Node, NodeSchema
+from src.entities.option_value import OptionValue, OptionValueSchema
+
+# creating the Flask application
+app = Flask(__name__)
 
 # generate database schema
 Base.metadata.create_all(engine)
