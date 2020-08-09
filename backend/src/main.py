@@ -17,6 +17,21 @@ Base.metadata.create_all(engine)
 
 @app.route('/decision/<tree_id>')
 def get_decision_framework(tree_id):
+    raise NotImplementedError()
+
+@app.route('/decisions/')
+def get_all_decisions():
+    # fetching from the database
+    session = Session()
+    tree_objects = session.query(Tree).all()
+
+    # transforming into JSON-serializable objects
+    schema = TreeSchema(many=True)
+    tree = schema.dump(tree_objects)
+
+    # serializing as JSON
+    session.close()
+    return jsonify(exams.data)
 
 
 @app.route('/decision', methods=['POST'])
@@ -24,23 +39,32 @@ def add_exam():
     # mount decision object
     posted_decision = DecisionSchema().load(request.get_json())
     decision = Decision(**posted_decision.data, created_by="HTTP post request")
-
-    # persist decision
+    
+    options = decision.options
+    option_values = decision.option_values
+    tree, nodes = decision.normalize()
+       
+    # persist decision tree
     session = Session()
-    session.add(exam)
+    session.add(tree)
+    session.add_all(nodes)
+    session.add_all(options)
+    session.add_all(option_values)
     session.commit()
 
-    # return created exam
-    new_exam = ExamSchema().dump(exam).data
+    # return created decision tree
+    new_decision = DecisionSchema().dump(decision).data
     session.close()
-    return jsonify(new_exam), 201
+    return jsonify(new_decision), 201
+
+"""
 # start session
 session = Session()
 
 # check for existing optionvalues
 opt_vals = session.query(OptionValue).all()
-
 current_user = 'Andrew'
+
 if len(opt_vals) == 0:
     # create and insert tree, node, option, and option value
     tree = Tree("test tree", "a simple test tree", current_user)
@@ -65,3 +89,4 @@ print('### OptionValues:')
 for opt_val in opt_vals:
     print(f'({opt_val.id}) {opt_val.node_id}  {opt_val.option_id}, w: {opt_val.weight}, v: {opt_val.value}')
 print(len(opt_vals))
+"""
