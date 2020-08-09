@@ -9,6 +9,7 @@ verify_ssl = true
 sqlalchemy = "*"
 flask = "*"
 marshmallow = "*"
+marshmallow-dataclass = "*"
 
 [requires]
 python_version = "3.7"
