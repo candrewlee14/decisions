@@ -1,9 +1,8 @@
 # coding=utf-8
 from marshmallow import Schema, fields
-from sqlalchemy import db.Column, db.String, Float, db.Integer, db.ForeignKey
-from .entity import Entity, Base, db
+from .entity import Entity,  db
 
-class Node(Entity, Base):
+class Node(Entity, db.Model):
     __tablename__ = 'nodes'
 
     title = db.Column(db.String)

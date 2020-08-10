@@ -1,10 +1,9 @@
 # coding=utf-8
 from marshmallow import Schema, fields
-from sqlalchemy import db.Column, db.String, Float, db.Integer, db.ForeignKey
-from .entity import Entity, Base, Session
+from .entity import Entity, db
 
 
-class Tree(Entity, Base):
+class Tree(Entity, db.Model):
     __tablename__ = 'trees'
     title = db.Column(db.String)
     description = db.Column(db.String)

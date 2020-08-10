@@ -5,11 +5,11 @@ from dataclasses import dataclass, field
 from typing import List
 import uuid
 
-from .entity import Entity, Base, _get_str_uuid_hex
 from .tree import Tree
 from .option import Option
 from .node import Node
 from .option_value import OptionValue
+from .entity import _get_str_uuid_hex
 
 @dataclass
 class FrameworkTreeNode:

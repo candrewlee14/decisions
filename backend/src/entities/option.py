@@ -1,21 +1,13 @@
 # coding=utf-8
+from dataclasses import dataclass, field
 from marshmallow import Schema, fields
-from sqlalchemy import db.Column, db.String, Float, db.Integer, db.ForeignKey
-from .entity import Entity, Base, db
+from .entity import Entity, db
 
-
-class Option(Entity, Base):
-    __tablename__ = 'options'
-
+@dataclass
+class Option(Entity, db.Model):
     title = db.Column(db.String)
     description = db.Column(db.String)
     tree_id = db.Column(db.Integer, db.ForeignKey("trees.id"), nullable=False, index=True)
-
-    def __init__(self, title, description, tree_id, created_by):
-        Entity.__init__(self, created_by)
-        self.title = title
-        self.description = description
-        self.tree_id = tree_id
 
 class OptionSchema(Schema):
     id = fields.Number()

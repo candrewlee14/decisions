@@ -3,30 +3,30 @@ from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from sqlalchemy import null
-
-# creating the Flask application
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db/decisions.db'
-db = SQLAlchemy(app)
-migrate = Migrate(app, db)
-
-from src.entities.entity import Session, engine, Base
+from src.entities.entity import db
 from src.entities.option_tree import *
 from src.entities.tree import Tree, TreeSchema
 from src.entities.option import Option, OptionSchema
 from src.entities.node import Node, NodeSchema
 from src.entities.option_value import OptionValue, OptionValueSchema
 
-engine.echo = True  # We want to see the SQL we're creating
-
-db.create_all()
+# creating the Flask application
+app = Flask(__name__)
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db/decisions.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///../db/decisions.db'
+app.config['SQLALCHEMY_ECHO'] = True
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+db.init_app(app)
+with app.app_context():
+    db.create_all()
+migrate = Migrate(app, db)
 
 @app.route('/decision/<tree_id>')
 def get_decision_framework(tree_id):
     #declare tables that are in database
-    trees_table = Table('trees', Base.metadata, autoload=True)
-    options_table = Table('options', Base.metadata, autoload=True)
-    option_values_table = Table('option_values', Base.metadata, autoload=True)
+    trees_table = db.Table('trees', db.metadata, autoload=True)
+    options_table = db.Table('options', db.metadata, autoload=True)
+    option_values_table = db.Table('option_values', db.metadata, autoload=True)
 
     #query for objects we want
     tree = trees_table.select(trees_table.c.id == tree_id)
