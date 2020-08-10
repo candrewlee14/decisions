@@ -5,34 +5,30 @@ from dataclasses import dataclass, field
 from typing import List
 import uuid
 
-from .entity import Entity, Base
+from .entity import Entity, Base, _get_str_uuid_hex
 from .tree import Tree
 from .option import Option
 from .node import Node
 from .option_value import OptionValue
 
-def _get_str_uuid():
-    return str(uuid.uuid4())
-
 @dataclass
 class FrameworkTreeNode:
     """Node for tree that holds all the weights and values of categories and subcategories in a decision option"""
-    node_id: str = field(default_factory=_get_str_uuid)
     title: str
     description: str
-    children: List[FrameworkTreeNode]
-    
+    children: List['FrameworkTreeNode'] #forward reference because this is self-referential
+    node_id: str = field(default_factory=_get_str_uuid_hex)
+
+
 @dataclass
 class FrameworkTree:
-    option_id: str = field(default_factory=_get_str_uuid)
     title: str
     description: str
     root: FrameworkTreeNode
-
+    option_id: str = field(default_factory=_get_str_uuid_hex)
 
 @dataclass
 class Decision:
-    tree_id: str = field(default_factory=_get_str_uuid)
     title: str
     description: str
     creator: str
@@ -40,6 +36,7 @@ class Decision:
     option_values: List[OptionValue]
     #option_tree without weights/values
     framework_tree: FrameworkTree
+    tree_id: str = field(default_factory=_get_str_uuid_hex)
     
     def normalize(self):
         tree = Tree(self.title, self.description, self.creator)

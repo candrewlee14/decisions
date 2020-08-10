@@ -1,0 +1,4 @@
+flask
+marshmallow
+marshmallow-dataclass
+sqlalchemy

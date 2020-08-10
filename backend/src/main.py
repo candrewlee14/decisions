@@ -4,16 +4,16 @@ from sqlalchemy import null
 
 from src.entities.option_tree import *
 from src.entities.entity import Session, engine, Base
-from src.entities.tree import Tree, Tree
+from src.entities.tree import Tree, TreeSchema
 from src.entities.option import Option, OptionSchema
 from src.entities.node import Node, NodeSchema
 from src.entities.option_value import OptionValue, OptionValueSchema
 
-# creating the Flask application
-app = Flask(__name__)
-
 # generate database schema
 Base.metadata.create_all(engine)
+
+# creating the Flask application
+app = Flask(__name__)
 
 @app.route('/decision/<tree_id>')
 def get_decision_framework(tree_id):
@@ -27,11 +27,11 @@ def get_all_decisions():
 
     # transforming into JSON-serializable objects
     schema = TreeSchema(many=True)
-    tree = schema.dump(tree_objects)
+    trees = schema.dump(tree_objects)
 
     # serializing as JSON
     session.close()
-    return jsonify(exams.data)
+    return jsonify(trees)
 
 
 @app.route('/decision', methods=['POST'])
