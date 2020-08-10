@@ -1,17 +1,16 @@
 # coding=utf-8
 from marshmallow import Schema, fields
-from sqlalchemy import Column, String, Float, Integer, ForeignKey
-from .entity import Entity, Base
-
+from sqlalchemy import db.Column, db.String, Float, db.Integer, db.ForeignKey
+from .entity import Entity, Base, db
 
 class Node(Entity, Base):
     __tablename__ = 'nodes'
 
-    title = Column(String)
-    description = Column(String)
-    tree_id = Column(String, ForeignKey("trees.id"), nullable=False)
-    parent_id = Column(String, ForeignKey("nodes.id"), nullable=True)
-    depth = Column(Integer)
+    title = db.Column(db.String)
+    description = db.Column(db.String)
+    tree_id = db.Column(db.String, db.ForeignKey("trees.id"), nullable=False, index=True)
+    parent_id = db.Column(db.String, db.ForeignKey("nodes.id"), nullable=True, index=True)
+    depth = db.Column(db.Integer)
 
     def __init__(self, title, description, tree_id, parent_id, depth, created_by):
         Entity.__init__(self, created_by)

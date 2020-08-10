@@ -1,13 +1,13 @@
 # coding=utf-8
 from marshmallow import Schema, fields
-from sqlalchemy import Column, String, Float, Integer, ForeignKey
+from sqlalchemy import db.Column, db.String, Float, db.Integer, db.ForeignKey
 from .entity import Entity, Base, Session
 
 
 class Tree(Entity, Base):
     __tablename__ = 'trees'
-    title = Column(String)
-    description = Column(String)
+    title = db.Column(db.String)
+    description = db.Column(db.String)
 
     def __init__(self, title, description, created_by):
         Entity.__init__(self, created_by)

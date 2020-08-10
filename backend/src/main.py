@@ -1,23 +1,35 @@
 # coding=utf-8
 from flask import Flask, jsonify, request
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 from sqlalchemy import null
 
-from src.entities.option_tree import *
+# creating the Flask application
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db/decisions.db'
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
+
 from src.entities.entity import Session, engine, Base
+from src.entities.option_tree import *
 from src.entities.tree import Tree, TreeSchema
 from src.entities.option import Option, OptionSchema
 from src.entities.node import Node, NodeSchema
 from src.entities.option_value import OptionValue, OptionValueSchema
 
-# generate database schema
-Base.metadata.create_all(engine)
+engine.echo = True  # We want to see the SQL we're creating
 
-# creating the Flask application
-app = Flask(__name__)
+db.create_all()
 
 @app.route('/decision/<tree_id>')
 def get_decision_framework(tree_id):
-    raise NotImplementedError()
+    #declare tables that are in database
+    trees_table = Table('trees', Base.metadata, autoload=True)
+    options_table = Table('options', Base.metadata, autoload=True)
+    option_values_table = Table('option_values', Base.metadata, autoload=True)
+
+    #query for objects we want
+    tree = trees_table.select(trees_table.c.id == tree_id)
 
 @app.route('/decisions/')
 def get_all_decisions():
@@ -46,6 +58,7 @@ def add_exam():
        
     # persist decision tree
     session = Session()
+
     session.add(tree)
     session.add_all(nodes)
     session.add_all(options)

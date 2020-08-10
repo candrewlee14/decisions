@@ -2,3 +2,5 @@ flask
 marshmallow
 marshmallow-dataclass
 sqlalchemy
+flask-migrate
+flask-sqlalchemy

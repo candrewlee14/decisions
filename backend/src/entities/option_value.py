@@ -1,17 +1,17 @@
 # coding=utf-8
 from marshmallow import Schema, fields
-from sqlalchemy import Column, String, Float, Integer, ForeignKey
+from sqlalchemy import db.Column, db.String, Float, db.Integer, db.ForeignKey
 from .entity import Entity, Base
 
 
 class OptionValue(Entity, Base):
     __tablename__ = 'option_values'
     
-    id = Column(Integer, primary_key=True)
-    node_id = Column(String, ForeignKey("nodes.id"), nullable=False)
-    option_id = Column(String, ForeignKey("trees.id"), nullable=False)
-    weight = Column(Float)
-    value = Column(Float)
+    id = db.Column(db.Integer, primary_key=True)
+    node_id = db.Column(db.String, db.ForeignKey("nodes.id"), nullable=False, index=True)
+    option_id = db.Column(db.String, db.ForeignKey("trees.id"), nullable=False, index=True)
+    weight = db.Column(Float)
+    value = db.Column(Float)
 
     def __init__(self, node_id, option_id, weight, value, created_by):
         Entity.__init__(self, created_by)
