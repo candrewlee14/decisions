@@ -1,14 +1,13 @@
 # coding=utf-8
 from marshmallow import Schema, fields
-from marshmallow_dataclass import class_schema
 from dataclasses import dataclass, field
 from typing import List
 import uuid
 
 from .tree import Tree
-from .option import Option
+from .option import Option, OptionSchema
 from .node import Node
-from .option_value import OptionValue
+from .option_value import OptionValue, OptionValueSchema
 from .entity import _get_str_uuid_hex
 
 @dataclass
@@ -19,6 +18,11 @@ class FrameworkTreeNode:
     children: List['FrameworkTreeNode'] #forward reference because this is self-referential
     node_id: str = field(default_factory=_get_str_uuid_hex)
 
+class FrameworkTreeNodeSchema(Schema):
+    title = fields.Str()
+    description = fields.Str()
+    children = fields.List(fields.Nested('FrameworkTreeNodeSchema'))
+    node_id = fields.Str()
 
 @dataclass
 class FrameworkTree:
@@ -27,11 +31,17 @@ class FrameworkTree:
     root: FrameworkTreeNode
     option_id: str = field(default_factory=_get_str_uuid_hex)
 
+class FrameworkTreeSchema(Schema):
+    title = fields.Str()
+    description = fields.Str()
+    root = fields.Nested(FrameworkTreeNodeSchema)
+    option_id = fields.Str()
+
 @dataclass
 class Decision:
     title: str
     description: str
-    creator: str
+    creator_id: int
     options: List[Option]
     option_values: List[OptionValue]
     #option_tree without weights/values
@@ -59,6 +69,11 @@ class Decision:
             self.creator
             ) for node_and_depth in q]
 
-FrameworkTreeNodeSchema = class_schema(FrameworkTreeNode)
-FrameworkTreeSchema = class_schema(FrameworkTree)
-DecisionSchema = class_schema(Decision)
+class DecisionSchema(Schema):
+    title = fields.Str()
+    description = fields.Str()
+    creator_id = fields.Integer()
+    options = fields.List(fields.Nested(OptionSchema))
+    option_values = fields.List(fields.Nested(OptionValueSchema))
+    framework_tree = fields.Nested(FrameworkTreeSchema)
+    tree_id = fields.Str()

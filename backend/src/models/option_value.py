@@ -4,9 +4,8 @@ from dataclasses import dataclass, field
 from .entity import Entity, db
 
 @dataclass
-class OptionValue(Entity, db.Model):
+class OptionValue(Entity, db.Model):   
     __tablename__ = 'option_values'
-    
     id = db.Column(db.Integer, primary_key=True)
     node_id = db.Column(db.String, db.ForeignKey("nodes.id"), nullable=False, index=True)
     option_id = db.Column(db.String, db.ForeignKey("trees.id"), nullable=False, index=True)
@@ -21,4 +20,3 @@ class OptionValueSchema(Schema):
     option_id = fields.Str()
     created_at = fields.DateTime()
     updated_at = fields.DateTime()
-    last_updated_by = fields.Str()

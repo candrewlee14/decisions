@@ -1,25 +1,26 @@
 # coding=utf-8
+import OpenSSL.debug
 from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from sqlalchemy import null
-from src.entities.entity import db
-from src.entities.option_tree import *
-from src.entities.tree import Tree, TreeSchema
-from src.entities.option import Option, OptionSchema
-from src.entities.node import Node, NodeSchema
-from src.entities.option_value import OptionValue, OptionValueSchema
+from src.models.entity import db
+from src.models.user import User
+from src.models.tree import Tree, TreeSchema
+from src.models.option import Option, OptionSchema
+from src.models.node import Node, NodeSchema
+from src.models.option_value import OptionValue, OptionValueSchema
+from src.models.decision import Decision, DecisionSchema
 
 # creating the Flask application
 app = Flask(__name__)
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db/decisions.db'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///../db/decisions.db'
 app.config['SQLALCHEMY_ECHO'] = True
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 db.init_app(app)
+migrate = Migrate(app, db)
 with app.app_context():
     db.create_all()
-migrate = Migrate(app, db)
 
 @app.route('/decision/<tree_id>')
 def get_decision_framework(tree_id):
@@ -34,15 +35,14 @@ def get_decision_framework(tree_id):
 @app.route('/decisions/')
 def get_all_decisions():
     # fetching from the database
-    session = Session()
-    tree_objects = session.query(Tree).all()
+    tree_objects = db.session.query(Tree).all()
 
     # transforming into JSON-serializable objects
     schema = TreeSchema(many=True)
     trees = schema.dump(tree_objects)
 
     # serializing as JSON
-    session.close()
+    db.session.close()
     return jsonify(trees)
 
 
