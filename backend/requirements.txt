@@ -4,3 +4,5 @@ marshmallow
 sqlalchemy
 flask-migrate
 flask-sqlalchemy
+flask-cors
+pyopenssl

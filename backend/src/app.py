@@ -3,8 +3,6 @@ import OpenSSL.debug
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
-from sqlalchemy import null
 from src.models.entity import db
 from src.models.user import User
 from src.models.tree import Tree, TreeSchema
@@ -20,7 +18,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///../db/decisions.db'
 app.config['SQLALCHEMY_ECHO'] = False
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
-migrate = Migrate(app, db)
 with app.app_context():
     db.create_all()
 
@@ -34,7 +31,7 @@ def get_decision_framework(tree_id):
     #query for objects we want
     tree = trees_table.select(trees_table.c.id == tree_id)
 
-@app.route('/decisions/')
+@app.route('/decisions')
 def get_all_decisions():
     # fetching from the database
     tree_objects = db.session.query(Tree).all()
@@ -59,45 +56,42 @@ def add_exam():
     tree, nodes = decision.normalize()
        
     # persist decision tree
-    session = Session()
 
-    session.add(tree)
-    session.add_all(nodes)
-    session.add_all(options)
-    session.add_all(option_values)
-    session.commit()
+    db.session.add(tree)
+    db.session.add_all(nodes)
+    db.session.add_all(options)
+    db.session.add_all(option_values)
+    db.session.commit()
 
     # return created decision tree
     new_decision = DecisionSchema().dump(decision).data
-    session.close()
+    db.session.close()
     return jsonify(new_decision), 201
 
 """
-# start session
-session = Session()
-
 # check for existing optionvalues
-opt_vals = session.query(OptionValue).all()
-current_user = 'Andrew'
-
+opt_vals = db.session.query(OptionValue).all()
 if len(opt_vals) == 0:
     # create and insert tree, node, option, and option value
-    tree = Tree("test tree", "a simple test tree", current_user)
-    session.add(tree)
+    user = User("basic_user", "John Doe", "johndoe@email.com", "BASIC-PASSWORD" )
+    session.add(user)
     session.commit()
-    node = Node("test node 1", "node 1 for option 1 for test tree", tree.id, null(), 0, current_user)
-    session.add(node)
-    session.commit()
+    tree = Tree("test tree", "a simple test tree", user.id, False)
+    db.session.add(tree)
+    db.session.commit()
+    node = Node("test node 1", "node 1 for option 1 for test tree", tree.id, db.null(), 0, current_user)
+    db.session.add(node)
+    db.session.commit()
     option = Option("test option 1", "option 1 for test tree", tree.id, current_user)
-    session.add(option)
-    session.commit()
+    db.session.add(option)
+    db.session.commit()
     option_value = OptionValue(node.id, option.id, 1, 1, current_user)
-    session.add(option_value)
-    session.commit()
-    session.close()
+    db.session.add(option_value)
+    db.session.commit()
+    db.session.close()
 
     # reload optionvalues
-    opt_vals = session.query(OptionValue).all()
+    opt_vals = db.session.query(OptionValue).all()
 
 # show existing exams
 print('### OptionValues:')
