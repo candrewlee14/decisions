@@ -8,7 +8,7 @@ class Option(Entity, db.Model):
     __tablename__ = 'options'
     title = db.Column(db.String)
     description = db.Column(db.String)
-    tree_id = db.Column(db.Integer, db.ForeignKey("trees.id"), nullable=False, index=True)
+    tree_id = db.Column(db.String, db.ForeignKey("trees.id"), nullable=False, index=True)
 
 class OptionSchema(Schema):
     id = fields.Number()
