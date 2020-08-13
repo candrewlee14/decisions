@@ -18,7 +18,7 @@ export class TreesApiService {
   // GET list of public, future events
   getTrees(): Observable<Tree[]> {
     return this.http
-      .get<Tree[]>(`${API_URL}/decisions`)
+      .get<Tree[]>(`${API_URL}/decisions/`)
       .pipe(catchError(TreesApiService._handleError));
   }
 }

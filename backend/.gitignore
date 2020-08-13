@@ -106,3 +106,7 @@ ENV/
 
 #SQLite database
 *.db
+
+#vscode EXCEPT launch.json
+.vscode/*
+!.vscode/launch.json

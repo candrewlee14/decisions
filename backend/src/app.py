@@ -15,8 +15,8 @@ from src.models.decision import Decision, DecisionSchema
 app = Flask(__name__)
 CORS(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///../db/decisions.db'
-app.config['SQLALCHEMY_ECHO'] = False
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+#app.config['SQLALCHEMY_ECHO'] = False
+#app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 with app.app_context():
     db.create_all()
@@ -24,14 +24,12 @@ with app.app_context():
 @app.route('/decision/<tree_id>')
 def get_decision_framework(tree_id):
     #declare tables that are in database
-    trees_table = db.Table('trees', db.metadata, autoload=True)
-    options_table = db.Table('options', db.metadata, autoload=True)
-    option_values_table = db.Table('option_values', db.metadata, autoload=True)
+    tree = Tree.query.filter_by(id = tree_id).first()
+    schema = TreeSchema()
+    tree_json = schema.dump(tree)
+    return jsonify(tree_json)
 
-    #query for objects we want
-    tree = trees_table.select(trees_table.c.id == tree_id)
-
-@app.route('/decisions')
+@app.route('/decisions/')
 def get_all_decisions():
     # fetching from the database
     tree_objects = db.session.query(Tree).all()
