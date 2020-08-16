@@ -13,7 +13,7 @@
       <p class="lead text-center">{{decision.tree.description}}</p>
     </div>
     <div class="col">
-      <p class="text-muted text-left font-italic">#{{decision.tree.id}}</p>
+      <p class="text-muted text-left font-italic ">#{{decision.tree.id}}</p>
       <p class="text-muted text-left font-italic">Last changed {{decision.tree.updated_at | date:'mediumDate'}}</p>
     </div>
   </div>
@@ -27,8 +27,11 @@
 
       <ng-template #recursiveListTmpl let-list>
         <li *ngFor="let item of list">
-            <span *ngIf="item.children?.length" (click)="toggleChildren(item)">{{item.expandIcon}}</span>
-            {{item.title }}
+        <div class="row">
+            <span class="icon-expand" *ngIf="item.children?.length" (click)="toggleChildren(item)">{{item.expandIcon}}</span>
+            <span class="lead col">{{item.title }}</span>
+            <small class="text-muted col">{{item.description}}</small>
+        </div>
           <ul *ngIf="item.children && item.children.length > 0 && item.visible">
             <ng-container *ngTemplateOutlet="recursiveListTmpl; context:{ $implicit: item.children }"></ng-container>
           </ul>
