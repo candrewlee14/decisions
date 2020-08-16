@@ -1,7 +1,9 @@
 import { ActivatedRoute } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
-import { Decision } from '../decision.models';
+import { Decision, setTreeStructure} from '../decision.models';
 import {TreesApiService} from '../trees-api.service';
+import { Node } from '../decision.models';
+
 
 @Component({
   selector: 'app-tree-overview',
@@ -10,6 +12,7 @@ import {TreesApiService} from '../trees-api.service';
 })
 export class TreeOverviewComponent implements OnInit {
   decision: Decision;
+  list: Array<Node>;
 
   constructor(
     private route: ActivatedRoute,
@@ -23,7 +26,22 @@ export class TreeOverviewComponent implements OnInit {
   getDecision(): void {
     const id = this.route.snapshot.paramMap.get('id');
     this.treeService.getDecision(id)
-      .subscribe(decision => this.decision = decision);
+      .subscribe(decision => {
+        this.decision = (decision as Decision);
+        setTreeStructure(this.decision);
+        this.list = [this.decision.decision_tree];
+      });
+  }
+
+  toggleChildren(node: Node): void {
+    // to do
+    node.visible = !node.visible;
+    if (node.expandIcon === '[+]'){
+      node.expandIcon = '[-]';
+    }
+    else {
+      node.expandIcon = '[+]';
+    }
   }
 
 }

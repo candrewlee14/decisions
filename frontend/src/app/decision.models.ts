@@ -1,3 +1,4 @@
+import { Identifiers } from '@angular/compiler';
 
 export class Node {
     public created_at: Date;
@@ -8,6 +9,10 @@ export class Node {
     public title: string;
     public tree_id: string;
     public updated_at: Date;
+    public depth: number;
+    public children?: Node[];
+    expandIcon: string;
+    visible: boolean;
 }
 
 export class OptionValue {
@@ -47,4 +52,23 @@ export class Decision {
     public option_values: OptionValue[];
     public options: Option[];
     public tree: Tree;
+    public decision_tree: Node;
+    
+}
+
+export function setTreeStructure(decision: Decision): void {
+    //create a node dictionary with their ids as key
+    var nodeDict = {};
+    decision.nodes.forEach(node => {
+        node.children = [];
+        node.visible = true;
+        node.expandIcon = '[+]';
+        nodeDict[node.id] = node;
+        if (!node.parent_id){
+            decision.decision_tree = nodeDict[node.id];
+        }
+        else {
+            nodeDict[node.parent_id].children.push(nodeDict[node.id]);
+        }
+    });
 }

@@ -24,6 +24,7 @@ class NodeSchema(Schema):
     title = fields.Str()
     description = fields.Str()
     tree_id = fields.Str()
+    depth = fields.Int()
     parent_id = fields.Str()
     created_at = fields.DateTime()
     updated_at = fields.DateTime()
