@@ -1,9 +1,16 @@
-<div class="container">
-  <div style="text-align:center">
-    <h1 class="display-2">Decision Trees</h1>
+ <div class="jumbotron text-center cloudy-knoxville-gradient">
+  <h1 class="display-4">Decision Trees</h1>
+  
+  <p class="lead">Here are the trees created so far </p>
   </div>
-  <h2>Here are the trees created so far: </h2>
-  <div class="list-group">
-      <app-tree *ngFor="let tree of treesList" [tree]="tree"></app-tree>
+<div class="container">
+ 
+  <!-- Search form -->
+  <div class="md-form active-cyan active-cyan-2 mb-3">
+    <input class="form-control" [(ngModel)]="searchText" type="search" id="search3" aria-label="Search" mdbInput>
+    <label for="search3">Search</label>
+  </div>
+  <div class="list-group" *ngFor="let tree of treesList | filter: searchText">
+      <app-tree  [tree]="tree"></app-tree>
   </div>
 </div>

@@ -8,7 +8,10 @@ import {AppComponent} from './app.component';
 import {TreesApiService} from './trees-api.service';
 import {TreeComponent} from './trees/tree.component';
 import { TreesListComponent } from './trees-list/trees-list.component';
-import {TreeOverviewComponent} from './tree-overview/tree-overview.component'
+import {TreeOverviewComponent} from './tree-overview/tree-overview.component';
+import { FilterPipe } from './filter.pipe';
+import { FormsModule } from '@angular/forms';
+
 
 @NgModule({
   declarations: [
@@ -17,11 +20,13 @@ import {TreeOverviewComponent} from './tree-overview/tree-overview.component'
     TreesListComponent,
     TreeOverviewComponent,
     MessagesComponent,
+    FilterPipe,
   ],
   imports: [
     AppRoutingModule,
     BrowserModule,
     HttpClientModule,
+    FormsModule,
   ],
   providers: [TreesApiService],
   bootstrap: [AppComponent]

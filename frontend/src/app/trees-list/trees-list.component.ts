@@ -12,7 +12,8 @@ import { Tree } from '../trees/tree.model';
 export class TreesListComponent implements OnInit, OnDestroy {
   treesListSubs: Subscription;
   treesList: Tree[];
-
+  searchText: string;
+  
   constructor(private treesApi: TreesApiService) { }
 
   ngOnInit(): void {
