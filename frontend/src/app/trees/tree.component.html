@@ -1,4 +1,7 @@
-<div class="tree" *ngIf="tree">
-    <h2>{{tree.name | uppercase}}</h2>
-    <h3>{{tree.description}}</h3> 
-</div>
+<a class="tree list-group-item list-group-item-action" *ngIf="tree" [routerLink]="['/decision/', tree.id]">
+    <div class="d-flex w-100 justify-content-between">
+        <h2>{{tree.title }}</h2>
+        <small>Last changed {{tree.updated_at | date:'mediumDate'}}</small>
+    </div>
+    <p class="text-muted">{{tree.description}}</p> 
+</a>

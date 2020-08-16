@@ -11,10 +11,10 @@ class Option(Entity, db.Model):
     tree_id = db.Column(db.String, db.ForeignKey("trees.id"), nullable=False, index=True)
 
 class OptionSchema(Schema):
-    id = fields.Number()
+    id = fields.Str()
     title = fields.Str()
     description = fields.Str()
-    tree_id = fields.Number()
+    tree_id = fields.Str()
     created_at = fields.DateTime()
     updated_at = fields.DateTime()
     last_updated_by = fields.Str()

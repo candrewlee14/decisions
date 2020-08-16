@@ -5,4 +5,5 @@ sqlalchemy
 flask-migrate
 flask-sqlalchemy
 flask-cors
+flask-login
 pyopenssl

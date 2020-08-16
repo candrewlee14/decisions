@@ -1,0 +1,9 @@
+<div class="container">
+  <div style="text-align:center">
+    <h1 class="display-2">Decision Trees</h1>
+  </div>
+  <h2>Here are the trees created so far: </h2>
+  <div class="list-group">
+      <app-tree *ngFor="let tree of treesList" [tree]="tree"></app-tree>
+  </div>
+</div>

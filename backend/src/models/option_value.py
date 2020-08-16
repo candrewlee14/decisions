@@ -14,9 +14,10 @@ class OptionValue(Entity, db.Model):
 
 class OptionValueSchema(Schema):
     id = fields.Number()
-    title = fields.Str()
-    description = fields.Str()
     node_id = fields.Str()
     option_id = fields.Str()
+    weight = fields.Float()
+    value = fields.Float()
     created_at = fields.DateTime()
     updated_at = fields.DateTime()
+    last_updated_by = fields.Str()

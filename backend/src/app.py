@@ -1,6 +1,7 @@
 # coding=utf-8
 import OpenSSL.debug
 from flask import Flask, jsonify, request
+from flask_login import LoginManager
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from src.models.entity import db
@@ -10,24 +11,39 @@ from src.models.option import Option, OptionSchema
 from src.models.node import Node, NodeSchema
 from src.models.option_value import OptionValue, OptionValueSchema
 from src.models.decision import Decision, DecisionSchema
+from os import urandom
 
 # creating the Flask application
 app = Flask(__name__)
 CORS(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///../db/decisions.db'
-#app.config['SQLALCHEMY_ECHO'] = False
-#app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_ECHO'] = False
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+login_manager = LoginManager()
+login_manager.init_app(app)
 db.init_app(app)
+app.secret_key = urandom(16)
 with app.app_context():
     db.create_all()
+
+@login_manager.user_loader
+def load_user(user_id):
+    return db.session.query(User).filter(User.id == user_id).first() or None
 
 @app.route('/decision/<tree_id>')
 def get_decision_framework(tree_id):
     #declare tables that are in database
-    tree = Tree.query.filter_by(id = tree_id).first()
-    schema = TreeSchema()
-    tree_json = schema.dump(tree)
-    return jsonify(tree_json)
+    decision = Decision()
+    decision.tree = db.session.query(Tree).filter(Tree.id == tree_id, Tree.is_private == False).first()
+    if not decision.tree:
+        return ""
+    decision.nodes = Node.query.filter(Node.tree_id == tree_id).order_by(Node.depth).all()
+    decision.options = Option.query.filter(Option.tree_id == tree_id).all()
+    decision.option_values = OptionValue.query.filter(Tree.id == tree_id).all()
+
+    schema = DecisionSchema()
+    decision_json = schema.dump(decision)
+    return jsonify(decision_json)
 
 @app.route('/decisions/')
 def get_all_decisions():

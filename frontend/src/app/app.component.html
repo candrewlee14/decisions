@@ -1,19 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Trees</title>
-</head>
-<body>
-  <div style="text-align:center">
-    <h1>Trees</h1>
-  </div>
-  <h2>Here are the trees created so far: </h2>
-  <ul>
-    <li *ngFor="let tree of treesList">
-      <app-tree [tree]="tree"></app-tree>
-    </li>
-  </ul>
-</body>
-</html>
+<nav class="navbar navbar-dark bg-dark">
+  <a class="navbar-brand" routerLink="/decisions">Decisions</a>
+</nav>
+<div class="spacer"></div>
+<router-outlet></router-outlet>
+<app-messages></app-messages>

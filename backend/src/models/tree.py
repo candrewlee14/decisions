@@ -1,9 +1,10 @@
 # coding=utf-8
 from marshmallow import Schema, fields
+from flask_login import UserMixin
 from .entity import Entity, db, datetime
 from .user import User
 
-class Tree(Entity, db.Model):
+class Tree(Entity, db.Model, UserMixin):
     __tablename__ = 'trees'
     title = db.Column(db.String)
     description = db.Column(db.String)
@@ -24,7 +25,7 @@ class TreeSchema(Schema):
     title = fields.Str()
     description = fields.Str()
     created_at = fields.DateTime()
-    created_by = fields
+    created_by = fields.Str()
     updated_at = fields.DateTime()
     last_updated_by = fields.Str()
     is_private = fields.Bool()

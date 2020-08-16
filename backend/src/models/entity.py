@@ -15,8 +15,8 @@ class Entity():
     created_at = db.Column(db.DateTime)
     updated_at = db.Column(db.DateTime)
     @declared_attr
-    def fk1(cls):
-        last_updated_by = db.Column(db.Integer, db.ForeignKey('users.id'), index = True)
+    def last_updated_by(cls):
+        return db.Column(db.Integer, db.ForeignKey('users.id'), index = True)
 
     def __init__(self, created_by):
         self.created_at = datetime.now()

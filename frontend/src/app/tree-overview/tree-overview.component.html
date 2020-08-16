@@ -1,0 +1,24 @@
+<div class="tree-overview" *ngIf="decision">
+<div class="jumbotron row">
+    <div class="col"></div>
+    <div class="text-center col-6">
+        <h3 class="display-2">{{decision.tree.title}}</h3>
+        <h3 class="lead text-center">{{decision.tree.description}}</h3>
+    </div>
+    <div class="col">
+        <p class="text-muted text-left font-italic">#{{decision.tree.id}}</p>
+        <p class="text-muted text-left font-italic">Last changed {{decision.tree.updated_at | date:'mediumDate'}}</p>
+    </div>
+</div>
+<div class="container">
+    <div style="text-align:center">
+        <h3 class="display-4">Nodes</h3>
+    </div>
+    <div class="list-group">
+        <div class = "list-group-item" *ngFor="let node of decision.nodes">
+                <h2>{{node.title}}</h2>
+                <p class="text-muted">{{node.description}}</p>
+        </div>
+    </div>
+</div>
+</div>
