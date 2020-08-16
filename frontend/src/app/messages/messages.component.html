@@ -1,0 +1,13 @@
+<div class="container">
+<br/>
+  <div class="card text-center" *ngIf="messageService.messages.length">
+    <div class="card-header d-flex justify-content-around bg-info text-white">
+      <h2>Messages</h2>
+      <button class="btn btn-light"
+            (click)="messageService.clear()">Clear</button>
+    </div>
+  <ol>
+    <li class="text-left message" *ngFor='let message of messageService.messages'> {{message}} </li>
+  </ol>
+  </div>
+</div>

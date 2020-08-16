@@ -1,0 +1,42 @@
+<script>
+  // Treeview Initialization
+  $(document).ready(function () {
+    $('.treeview').mdbTreeview();
+  });
+
+</script>
+<div class="tree-overview" *ngIf="decision">
+  <div class="jumbotron row cloudy-knoxville-gradient">
+    <div class="col"></div>
+    <div class="text-center col-6">
+      <h3 class="display-4">{{decision.tree.title}}</h3>
+      <p class="lead text-center">{{decision.tree.description}}</p>
+    </div>
+    <div class="col">
+      <p class="text-muted text-left font-italic ">#{{decision.tree.id}}</p>
+      <p class="text-muted text-left font-italic">Last changed {{decision.tree.updated_at | date:'mediumDate'}}</p>
+    </div>
+  </div>
+  <div class="container">
+    <div class="treeview">
+      <h3 class="display-4">Nodes</h3>
+      <hr>
+      <ul>
+        <ng-container *ngTemplateOutlet="recursiveListTmpl; context:{ $implicit: list }"></ng-container>
+      </ul>
+
+      <ng-template #recursiveListTmpl let-list>
+        <li *ngFor="let item of list">
+        <div class="row">
+            <span class="icon-expand" *ngIf="item.children?.length" (click)="toggleChildren(item)">{{item.expandIcon}}</span>
+            <span class="lead col">{{item.title }}</span>
+            <small class="text-muted col">{{item.description}}</small>
+        </div>
+          <ul *ngIf="item.children && item.children.length > 0 && item.visible">
+            <ng-container *ngTemplateOutlet="recursiveListTmpl; context:{ $implicit: item.children }"></ng-container>
+          </ul>
+        </li>
+      </ng-template>
+    </div>
+  </div>
+</div>
